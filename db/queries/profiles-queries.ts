@@ -18,19 +18,17 @@ export const createProfile = async (data: InsertProfile) => {
 // 2. CRUD - Read
 export const getProfileByUserId = async (userId: string) => {
     try {
-        const profile = await db.query.profiles.findFirst({
+        const profile = await db.query.profile.findFirst({
             where: eq(profilesTable.userId, userId)
         })
         return profile
     } catch (error) {
-        console.error("Error creating profile", error);
-        throw new Error("Failed to create profile")
+        console.error("Error reading profile", error);
+        throw new Error("Failed to read profile")
     }
-
-
 }
 
-// 1. CRUD - Update
+// 3. CRUD - Update
 export const updateProfileByUserId = async (
     userId: string,
     data: Partial<InsertProfile>
@@ -43,18 +41,35 @@ export const updateProfileByUserId = async (
             .returning();
         return updatedProfile
     } catch (error) {
-        console.error("Error creating profile", error);
-        throw new Error("Failed to create profile")
+        console.error("Error updating profile", error);
+        throw new Error("Failed to update profile")
     }
 
-} 
+}
 
-// 1. CRUD - Delete
+export const updateProfileByStripeCustomerId = async (
+    stripeCustomerId: string,
+    data: Partial<InsertProfile>
+) => {
+    try {
+        const [updatedProfile] = await db
+            .update(profilesTable)
+            .set(data)
+            .where(eq(profilesTable.stripeCustomerId, stripeCustomerId))
+            .returning()
+        return updatedProfile
+    } catch (error) {
+        console.error("Error updating profile by stripe customer id", error)
+        throw new Error("Failed to update profile by stripe customer id")
+    }
+}
+
+// 4. CRUD - Delete
 export const deleteProfileByUserId = async (userId: string) => {
     try {
         await db.delete(profilesTable).where(eq(profilesTable.userId, userId))
     } catch (error) {
-        console.error("Error creating profile", error);
-        throw new Error("Failed to create profile")
+        console.error("Error deleting profile", error);
+        throw new Error("Failed to delite profile")
     }
 }

@@ -2,7 +2,7 @@ import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const membershipEnum = pgEnum("membership", ["free", "pro"]);
 
-export const profilesTable = pgTable("profiles", {
+export const profilesTable = pgTable("profile", {
     userId: text("user_id").primaryKey(),
     membership: membershipEnum("membership").notNull().default("free"),
     

@@ -1,19 +1,19 @@
-import { createProfile, getProfileByUserId } from "@/db/queries/profiles-queries";
-import { ClerkProvider } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getProfileByUserId } from "@/db/queries/profiles-queries";
+import { createProfile } from "@/db/queries/profiles-queries";
+import { auth } from "@clerk/nextjs/server";
+import { ClerkProvider } from "@clerk/nextjs";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Geist({
   variable: "--font-geist-sans",
-  weight: "100 900",
+  subsets: ["latin"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  weight: "100 900",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -26,20 +26,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { userId } = await auth()
 
+  const { userId } = await auth()
+  
   if (userId) {
     const profile = await getProfileByUserId(userId)
     if (!profile) {
       await createProfile({ userId })
-    }
-  }
+      }
+  } 
 
   return (
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={'${geistSans.variable} ${geistMono.variable} antialiased'}
         >
           {children}
         </body>

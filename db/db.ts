@@ -1,15 +1,16 @@
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
-import postgres  from "postgres";
+import { Pool } from "pg";
 import { profilesTable } from "./schema" 
 
 config({ path: ".env.local" });
 
 const schema = {
-    profiles: profilesTable
- 
+    profile: profilesTable
 }
 
-const client = postgres(process.env.DATABASE_URL!);
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL!,
+});
 
-export const db = drizzle(client, { schema });
+export const db = drizzle(pool, { schema });

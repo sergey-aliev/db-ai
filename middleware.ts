@@ -1,30 +1,32 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { useId } from "react";
 
-const isProtectedRoute = createRouteMatcher(["/chat(.*)"])
+const isProtectedRoute = createRouteMatcher(["/chat(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-    //Allow the root path to access sign-up component
-    if (req.nextUrl.pathname === "/") {
+  const { userId } = await auth();
+
+  // Allow public routes
+  if (req.nextUrl.pathname === "/") {
       return NextResponse.next();
     }
 
-    const { userId, redirectToSignIn } = await auth();
-
-    if (!userId && isProtectedRoute(req)) {
-      return redirectToSignIn({ returnBackUrl: "/login"});  
-    }
-
-    if (userId && isProtectedRoute(req)) {
+    // Protect chat routes
+    if (isProtectedRoute(req)) {
+      if (!userId) {
+        return (await auth()).redirectToSignIn({ returnBackUrl: req.url });
+      }
       return NextResponse.next();
-    }
-});
+    } 
+
+    // Allow all other routes
+    return NextResponse.next();
+  });
 
 export const config = {
-    mather: [
-        "/((?!.+\\.[\\w]+$|_next|sign-in|sign-up).*)",
-        "/",
-        "/(api|trpc)(.*)"
+  mather: [
+    "/((?!.+\\.[\\w]+$|_next).*)", // Match all paths exept static files
+        "/", // Match root
+        "/(api|trpc)(.*)" // Match API routes 
     ]
 };

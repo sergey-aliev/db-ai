@@ -8,6 +8,13 @@
       "when": 1753085183409,
       "tag": "0000_magical_spitfire",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753869845887,
+      "tag": "0001_woozy_black_bolt",
+      "breakpoints": true
     }
   ]
 }
