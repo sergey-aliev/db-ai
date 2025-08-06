@@ -76,7 +76,7 @@ export function Pricing() {
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan, _idx) => (
+          {plans.map((plan, any) => (
             <Card
               key={plan.name}
               className={`flex flex-col border-0 shadow-xl rounded-3xl px-6 pt-10 pb-8 transition-all duration-300 ${plan.highlight ? 'ring-2 ring-gray-900 scale-105 z-10' : 'bg-gray-50'}`}

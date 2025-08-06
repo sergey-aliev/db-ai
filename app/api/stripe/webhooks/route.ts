@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     // Пытаемся конструктивно воссоздать событие Stripe на основе тела запроса, подписи и секрета
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-    const data = event.data as Stripe.Event.Data;
+    console.log("Event:", event);
   } catch (err: any) {
     console.error(`Webhook Error: ${err.message}`);
     // Возвращаем ошибку, если не удалось подтвердить событие

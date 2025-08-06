@@ -6,10 +6,11 @@ import { createProfile } from "@/db/queries/profiles-queries";
 import { auth } from "@clerk/nextjs/server";
 import { ClerkProvider } from "@clerk/nextjs";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+
+// const geistSans = Geist({
+//  variable: "--font-geist-sans",
+//  subsets: ["latin"],
+//});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
