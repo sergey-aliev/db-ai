@@ -3,6 +3,7 @@ import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
+
 const relevantEvents = new Set(["checkout.session.completed", "customer.subscription.updated", "customer.subscription.deleted"]);
 
 // Функция для обработки изменений в статусе подписки.
@@ -66,6 +67,7 @@ export async function POST(req: Request) {
 
     // Пытаемся конструктивно воссоздать событие Stripe на основе тела запроса, подписи и секрета
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    const data = event.data as Stripe.Event.Data;
   } catch (err: any) {
     console.error(`Webhook Error: ${err.message}`);
     // Возвращаем ошибку, если не удалось подтвердить событие

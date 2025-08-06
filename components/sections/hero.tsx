@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { Link } from 'lucide-react'
 
 export function Hero() {
   return (
@@ -109,9 +110,9 @@ export function Hero() {
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Already have an account?{' '}
-                    <a href="/sign-in" className="text-purple-600 hover:text-purple-700 font-medium">
+                    <Link href="/sign-in" className="text-purple-600 hover:text-purple-700 font-medium">
                       Sign in
-                    </a>
+                    </Link>
                   </p>
                 </div>
 
