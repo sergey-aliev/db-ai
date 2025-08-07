@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { useSignUp } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export function Hero() {
   const { isLoaded, signUp, setActive } = useSignUp()
@@ -59,11 +60,16 @@ export function Hero() {
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
       setPendingVerification(true)
       console.log('Email verification prepared successfully')
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Sign up error:', err)
       
-      if (err.errors && err.errors.length > 0) {
-        setError(err.errors[0].longMessage || err.errors[0].message)
+      if (err && typeof err === 'object' && 'errors' in err) {
+        const clerkError = err as { errors: Array<{ longMessage?: string; message?: string }> }
+        if (clerkError.errors && clerkError.errors.length > 0) {
+          setError(clerkError.errors[0].longMessage || clerkError.errors[0].message || 'Sign up failed')
+        } else {
+          setError('An error occurred during sign up. Please try again.')
+        }
       } else {
         setError('An error occurred during sign up. Please try again.')
       }
@@ -101,10 +107,15 @@ export function Hero() {
         await setActive({ session: completeSignUp.createdSessionId })
         router.push('/dashboard')
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Verification error:', err)
-      if (err.errors && err.errors.length > 0) {
-        setError(err.errors[0].longMessage || err.errors[0].message)
+      if (err && typeof err === 'object' && 'errors' in err) {
+        const clerkError = err as { errors: Array<{ longMessage?: string; message?: string }> }
+        if (clerkError.errors && clerkError.errors.length > 0) {
+          setError(clerkError.errors[0].longMessage || clerkError.errors[0].message || 'Verification failed')
+        } else {
+          setError('Verification failed. Please try again.')
+        }
       } else {
         setError('Verification failed. Please try again.')
       }
@@ -271,9 +282,9 @@ export function Hero() {
                   <div className="text-center">
                     <p className="text-sm text-gray-600">
                       Already have an account?{' '}
-                      <a href="/sign-in" className="text-purple-600 hover:text-purple-700 font-medium">
+                      <Link href="/sign-in" className="text-purple-600 hover:text-purple-700 font-medium">
                         Sign in
-                      </a>
+                      </Link>
                     </p>
                   </div>
                 </form>
