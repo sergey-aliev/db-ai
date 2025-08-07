@@ -6,11 +6,10 @@ import { createProfile } from "@/db/queries/profiles-queries";
 import { auth } from "@clerk/nextjs/server";
 import { ClerkProvider } from "@clerk/nextjs";
 
-
-// const geistSans = Geist({
-//  variable: "--font-geist-sans",
-//  subsets: ["latin"],
-//});
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -27,22 +26,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const { userId } = await auth()
+  const { userId } = await auth();
   
   if (userId) {
-    const profile = await getProfileByUserId(userId)
+    const profile = await getProfileByUserId(userId);
     if (!profile) {
-      await createProfile({ userId })
-      }
-  } 
-
+      await createProfile({ userId });
+    }
+  }
+  
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={'${geistSans.variable} ${geistMono.variable}'}
-        >
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           {children}
         </body>
       </html>
